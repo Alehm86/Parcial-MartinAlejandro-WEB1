@@ -1,33 +1,10 @@
 
-var cardElement = [
-    {
-        titulo: "Comprar comida",
-        estado: "activo",
-        fecha: "25/06/2024",
-        texto: "ipsum Lorem ipsum dolor, sit amet consectetur adipisicing elit. Perferendis ut quis corporis itaque dolorum omnis sit recusandae maxime saepe adipisci quasi modi numquam aut illum tenetur nesciunt veritatis, a aliquam."
-    },
-    {
-        titulo: "Estudiar para parcial",
-        estado: "activo",
-        fecha: "21/06/2024",
-        texto: "ipsum Lorem ipsum dolor, sit amet consectetur adipisicing elit. Perferendis ut quis corporis itaque dolorum omnis sit recusandae maxime saepe adipisci quasi modi numquam aut illum tenetur nesciunt veritatis, a aliquam."
-    },{
-        titulo: "Regar plantas",
-        estado: "terminado",
-        fecha: "22/06/2024",
-        texto: "ipsum Lorem ipsum dolor, sit amet consectetur adipisicing elit. Perferendis ut quis corporis itaque dolorum omnis sit recusandae maxime saepe adipisci quasi modi numquam aut illum tenetur nesciunt veritatis, a aliquam."
-    }
-]
-
-window.onload = cargarEvento;
-
-function cargarEvento(){
-    document.getElementById("nuevaTarea").addEventListener("submit", nuevaTarea, false);    
-}
-
+const tareas= JSON.parse(localStorage.getItem("cardElementLS"));
 
 const contCard = document.querySelector('main');
+
 function cargarCards(){
+    
     cardElement.forEach(cards => {
         const div = document.createElement('div');
         div.classList.add("card");
@@ -43,6 +20,7 @@ function cargarCards(){
                                 <span class="cardDesc">
                                     <p>${cards.texto}</p>
                                 </span>
+                                <input type="submit" value="Eliminar" class="btnDelete" id="btnDelete">
                 
                             </div>
                         </div>
@@ -51,19 +29,35 @@ function cargarCards(){
     })   
 }
 
+let cardElement;
+
+let cardElementLS = localStorage.getItem("cardElement");
 
 
-function nuevaTarea(event){
-    event.preventDefault();
+if (cardElementLS) {
+    cardElement = JSON.parse(cardElementLS);
 
-    var titulo= document.getElementById("idTitulo").value;
-    var descripcion= document.getElementById("idDescripcion").value;
-    var fecha= document.getElementById("idFecha").value;
-    var estado= document.getElementById("idEstado").value;
-
-    console.log(titulo);
-
-    var nuevaTarea={titulo: titulo, estado: estado, fecha: fecha, texto:descripcion};
-    cardElement.push(nuevaTarea);
-    cargarCards();
+} else {
+    cardElement = []
 }
+
+
+
+const btnAdd = document.getElementById('btnGuardar')
+btnAdd.addEventListener('click', ()=>{
+ 
+    const titulo= document.getElementById("idTitulo").value;
+    const descripcion= document.getElementById("idDescripcion").value;
+    const fecha= document.getElementById("idFecha").value;
+    const estado= document.getElementById("idEstado").value;
+
+    const newItem = {titulo: titulo, estado: estado, fecha: fecha, texto:descripcion }
+
+    cardElement.push(newItem);
+    console.log(cardElement);
+    localStorage.setItem("cardElement", JSON.stringify(cardElement));
+    cargarCards();
+    
+})
+
+
